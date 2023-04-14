@@ -19,11 +19,23 @@
     "@jest/globals": "^29.5.0",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
     "@types/pg": "^8.6.6",
     "@types/pg-format": "^1.0.2",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.0.2"
-  }
+    "typescript": "^5.0.4"
+  },
+  "description": "## **Introdução**",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kenzie-Academy-Brasil-Developers/controle-de-projetos-kenzievelopers-sp3-m4-isabelpaiva.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Kenzie-Academy-Brasil-Developers/controle-de-projetos-kenzievelopers-sp3-m4-isabelpaiva/issues"
+  },
+  "homepage": "https://github.com/Kenzie-Academy-Brasil-Developers/controle-de-projetos-kenzievelopers-sp3-m4-isabelpaiva#readme"
 }
