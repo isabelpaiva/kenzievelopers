@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { QueryResult } from "pg";
 import { client } from "../database";
 
-const verifyUserExists = async (
+const verifyUserProjects = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-  const id = req.params.id;
+  const id = req.body.developerId;
 
   const queryResult: QueryResult = await client.query({
     text: "SELECT * FROM developers WHERE id = $1",
@@ -21,4 +21,4 @@ const verifyUserExists = async (
   return next();
 };
 
-export { verifyUserExists };
+export { verifyUserProjects };
