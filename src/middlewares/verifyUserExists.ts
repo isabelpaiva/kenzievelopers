@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { QueryResult } from "pg";
 import { client } from "../database";
 
-const verifyUserExists = async (
+const ensureVerifyUserExistsMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -21,4 +21,4 @@ const verifyUserExists = async (
   return next();
 };
 
-export { verifyUserExists };
+export { ensureVerifyUserExistsMiddleware };

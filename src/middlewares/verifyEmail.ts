@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { QueryResult } from "pg";
 import { client } from "../database";
 
-const verifyEmail = async (
+const ensureverifyEmailMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -23,4 +23,4 @@ const verifyEmail = async (
   return next();
 };
 
-export { verifyEmail };
+export { ensureverifyEmailMiddleware };

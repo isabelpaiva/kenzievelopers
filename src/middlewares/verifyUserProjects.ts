@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { QueryResult } from "pg";
 import { client } from "../database";
 
-const verifyUserProjects = async (
+const ensureVerifyUserProjectsMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -21,4 +21,4 @@ const verifyUserProjects = async (
   return next();
 };
 
-export { verifyUserProjects };
+export { ensureVerifyUserProjectsMiddleware };

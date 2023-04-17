@@ -2,9 +2,16 @@ import { Request, Response } from "express";
 import format from "pg-format";
 import { QueryConfig, QueryResult } from "pg";
 import { client } from "../database";
+import {
+  IDevelopers,
+  IInfoDevelopers,
+  IProject,
+  IProjectTechnology,
+  TDeveloper,
+} from "../interfaces/interfaces";
 
 const createDeveloper = async (req: Request, res: Response) => {
-  const body = req.body;
+  const body: IDevelopers = req.body;
 
   const queryString: string = format(
     `INSERT INTO
@@ -16,7 +23,7 @@ const createDeveloper = async (req: Request, res: Response) => {
     Object.values(body)
   );
 
-  const queryResult: QueryResult = await client.query(queryString);
+  const queryResult: QueryResult<TDeveloper> = await client.query(queryString);
 
   return res.status(201).json(queryResult.rows[0]);
 };
@@ -32,7 +39,7 @@ const getDeveloperById = async (req: Request, res: Response) => {
   const { name, email, developerSince, preferredOS, developerId } =
     queryResult.rows[0];
 
-  const resposta = {
+  const response = {
     developerId: developerId,
     developerName: name,
     developerEmail: email,
@@ -40,13 +47,16 @@ const getDeveloperById = async (req: Request, res: Response) => {
     developerInfoPreferredOS: preferredOS,
   };
 
-  return res.status(200).json(resposta);
+  return res.status(200).json(response);
 };
 
-const createDeveloperInfo = async (req: Request, res: Response) => {
-  const body = req.body;
+const createDeveloperInfo = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const body: IInfoDevelopers = req.body;
   const id = req.params.id;
-  body.developerId = id;
+  body.developerId = parseInt(id);
 
   const queryString: string = format(
     `INSERT INTO
@@ -62,8 +72,11 @@ const createDeveloperInfo = async (req: Request, res: Response) => {
   return res.status(201).json(queryResult.rows[0]);
 };
 
-const updateDeveloper = async (req: Request, res: Response) => {
-  const body = req.body;
+const updateDeveloper = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const body: IDevelopers = req.body;
   const id = req.params.id;
 
   const queryString = format(
@@ -82,7 +95,11 @@ const updateDeveloper = async (req: Request, res: Response) => {
   return res.json(queryResult.rows[0]);
 };
 
-const deleteDeveloper = async (req: Request, res: Response) => {
+
+const deleteDeveloper = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const id = req.params.id;
   const queryResult: QueryResult = await client.query({
     text: `DELETE FROM developers WHERE developers.id = $1`,
@@ -92,8 +109,11 @@ const deleteDeveloper = async (req: Request, res: Response) => {
   return res.status(204).json({});
 };
 
-const createProjects = async (req: Request, res: Response) => {
-  const body = req.body;
+const createProjects = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const body: IProject = req.body;
   const queryString: string = format(
     `INSERT INTO
             projects(%I)
@@ -114,10 +134,13 @@ const createProjects = async (req: Request, res: Response) => {
   return res.status(201).json(queryResult.rows[0]);
 };
 
-const getProjectsById = async (req: Request, res: Response) => {
+const getProjectsById = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const id = req.params.id;
 
-  const queryResult: QueryResult = await client.query({
+  const queryResult: QueryResult<IProjectTechnology>= await client.query({
     text: `SELECT
     projects.id AS "projectId",
     projects.name AS "projectName", 
@@ -139,7 +162,10 @@ const getProjectsById = async (req: Request, res: Response) => {
   return res.status(200).json(queryResult.rows);
 };
 
-const updateProjects = async (req: Request, res: Response) => {
+const updateProjects = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const body = req.body;
   const id = req.params.id;
 
@@ -159,7 +185,10 @@ const updateProjects = async (req: Request, res: Response) => {
   return res.status(200).json(queryResult.rows[0]);
 };
 
-const deleteProjects = async (req: Request, res: Response) => {
+const deleteProjects = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const id = req.params.id;
   const queryResult: QueryResult = await client.query({
     text: `DELETE FROM projects WHERE projects.id = $1`,
@@ -169,7 +198,7 @@ const deleteProjects = async (req: Request, res: Response) => {
   return res.status(204).json({});
 };
 
-const createTech = async (req: Request, res: Response) => {
+const createTech = async (req: Request, res: Response): Promise<Response> => {
   const body = req.body;
   const id = req.params.id;
 
@@ -211,12 +240,15 @@ const createTech = async (req: Request, res: Response) => {
     projectEndDate: queryResultProjects.rows[0].endDate,
   };
 
-  const queryResult: QueryResult = await client.query(queryString);
+  const queryResult: QueryResult<IProject> = await client.query(queryString);
 
   return res.status(201).json(ProjectTech);
 };
 
-const deleteTechProjects = async (req: Request, res: Response) => {
+const deleteTechProjects = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const id = req.params.id;
   const tech = req.params.name;
 

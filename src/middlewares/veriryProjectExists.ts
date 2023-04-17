@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { QueryResult } from "pg";
 import { client } from "../database";
 
-const verifyProjectExists = async (
+const ensureVerifyProjectExistsMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -21,4 +21,4 @@ const verifyProjectExists = async (
   return next();
 };
 
-export { verifyProjectExists };
+export { ensureVerifyProjectExistsMiddleware };

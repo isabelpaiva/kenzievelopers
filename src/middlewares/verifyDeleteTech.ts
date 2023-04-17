@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { QueryResult } from "pg";
 import { client } from "../database";
 
-const verifyDeleteTech = async (
+const ensureVerifyDeleteTechMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -63,4 +63,4 @@ const verifyDeleteTech = async (
   return next();
 };
 
-export { verifyDeleteTech };
+export { ensureVerifyDeleteTechMiddleware };

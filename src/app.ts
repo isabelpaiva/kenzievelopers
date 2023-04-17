@@ -13,49 +13,56 @@ import {
   updateDeveloper,
   updateProjects,
 } from "./logics/logic";
-import { verifyDeleteTech } from "./middlewares/verifyDeleteTech";
-import { verifyEmail } from "./middlewares/verifyEmail";
-import { verifyInfo } from "./middlewares/verifyInfo";
-import { verifyTech } from "./middlewares/verifyTech";
-import { verifyUserExists } from "./middlewares/verifyUserExists";
-import { verifyUserProjects } from "./middlewares/verifyUserProjects";
-import { verifyProjectExists } from "./middlewares/veriryProjectExists";
-
+import { ensureVerifyDeleteTechMiddleware } from "./middlewares/verifyDeleteTech";
+import { ensureverifyEmailMiddleware } from "./middlewares/verifyEmail";
+import { ensureVerifyInfoMiddleware } from "./middlewares/verifyInfo";
+import { ensureVerifyTechMiddleware } from "./middlewares/verifyTech";
+import { ensureVerifyUserExistsMiddleware } from "./middlewares/verifyUserExists";
+import { ensureVerifyUserProjectsMiddleware } from "./middlewares/verifyUserProjects";
+import { ensureVerifyProjectExistsMiddleware } from "./middlewares/veriryProjectExists";
 
 const app: Application = express();
 
 app.use(express.json());
 
-//Rotas Developer
-
-app.post("/developers", verifyEmail, createDeveloper);
-app.get("/developers/:id", verifyUserExists, getDeveloperById);
-app.patch("/developers/:id", verifyUserExists, verifyEmail, updateDeveloper);
-app.delete("/developers/:id", verifyUserExists, deleteDeveloper);
+app.post("/developers", ensureverifyEmailMiddleware, createDeveloper);
+app.get("/developers/:id", ensureVerifyUserExistsMiddleware, getDeveloperById);
+app.patch(
+  "/developers/:id",
+  ensureVerifyUserExistsMiddleware,
+  ensureverifyEmailMiddleware,
+  updateDeveloper
+);
+app.delete(
+  "/developers/:id",
+  ensureVerifyUserExistsMiddleware,
+  deleteDeveloper
+);
 app.post(
   "/developers/:id/infos",
-  verifyUserExists,
-  verifyInfo,
+  ensureVerifyUserExistsMiddleware,
+  ensureVerifyInfoMiddleware,
   createDeveloperInfo
 );
 
-//Rotas Projects
-
-app.post("/projects", verifyUserProjects, createProjects);
-app.get("/projects/:id", verifyProjectExists, getProjectsById);
+app.post("/projects", ensureVerifyUserProjectsMiddleware, createProjects);
+app.get("/projects/:id", ensureVerifyProjectExistsMiddleware, getProjectsById);
 app.patch(
   "/projects/:id",
-  verifyUserExists,
-  verifyUserProjects,
+  ensureVerifyUserExistsMiddleware,
+  ensureVerifyUserProjectsMiddleware,
   updateProjects
 );
-app.delete("/projects/:id", verifyProjectExists, deleteProjects);
-app.post("/projects/:id/technologies", verifyTech, createTech);
+app.delete(
+  "/projects/:id",
+  ensureVerifyProjectExistsMiddleware,
+  deleteProjects
+);
+app.post("/projects/:id/technologies", ensureVerifyTechMiddleware, createTech);
 app.delete(
   "/projects/:id/technologies/:name",
-  verifyDeleteTech,
+  ensureVerifyDeleteTechMiddleware,
   deleteTechProjects
 );
-
 
 export default app;
