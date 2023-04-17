@@ -3,11 +3,13 @@ import format from "pg-format";
 import { QueryConfig, QueryResult } from "pg";
 import { client } from "../database";
 import {
+  IDeveloperInfo,
   IDevelopers,
   IInfoDevelopers,
   IProject,
   IProjectTechnology,
   TDeveloper,
+  TProject,
 } from "../interfaces/interfaces";
 
 const createDeveloper = async (req: Request, res: Response) => {
@@ -68,7 +70,9 @@ const createDeveloperInfo = async (
     Object.values(body)
   );
 
-  const queryResult: QueryResult = await client.query(queryString);
+  const queryResult: QueryResult<IDeveloperInfo> = await client.query(
+    queryString
+  );
   return res.status(201).json(queryResult.rows[0]);
 };
 
@@ -95,13 +99,12 @@ const updateDeveloper = async (
   return res.json(queryResult.rows[0]);
 };
 
-
 const deleteDeveloper = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   const id = req.params.id;
-  const queryResult: QueryResult = await client.query({
+  const queryResult: QueryResult<IDeveloperInfo> = await client.query({
     text: `DELETE FROM developers WHERE developers.id = $1`,
     values: [id],
   });
@@ -124,12 +127,12 @@ const createProjects = async (
     Object.values(body)
   );
 
-  const queryResult: QueryResult = await client.query(queryString);
+  const queryResult: QueryResult<TProject> = await client.query(queryString);
 
-  queryResult.rows[0].startDate = new Date(body.startDate).toISOString();
-  queryResult.rows[0].endDate = queryResult.rows[0].endDate
-    ? new Date(body.endDate).toISOString()
-    : null;
+  queryResult.rows[0].startDate =
+    typeof body.startDate === "string"
+      ? new Date(body.startDate).toISOString()
+      : body.startDate.toISOString();
 
   return res.status(201).json(queryResult.rows[0]);
 };
@@ -140,7 +143,7 @@ const getProjectsById = async (
 ): Promise<Response> => {
   const id = req.params.id;
 
-  const queryResult: QueryResult<IProjectTechnology>= await client.query({
+  const queryResult: QueryResult<IProjectTechnology> = await client.query({
     text: `SELECT
     projects.id AS "projectId",
     projects.name AS "projectName", 
@@ -166,7 +169,7 @@ const updateProjects = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const body = req.body;
+  const body: IProjectTechnology = req.body;
   const id = req.params.id;
 
   const queryString = format(
@@ -199,7 +202,7 @@ const deleteProjects = async (
 };
 
 const createTech = async (req: Request, res: Response): Promise<Response> => {
-  const body = req.body;
+  const body: IProjectTechnology = req.body;
   const id = req.params.id;
 
   const queryResultProjects: QueryResult = await client.query({
